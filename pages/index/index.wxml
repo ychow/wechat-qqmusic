@@ -39,6 +39,7 @@
     </view>
 
     <view class="item">
+      <navigator url="../detail/detail?id=ea">
       <image src="{{topListIcons[1]}}"></image>
       <view class="topic-info">
         <view class="topic-content">
@@ -49,10 +50,11 @@
         </view>
         <text class="arrow"></text>
       </view>
-      
+      </navigator>
     </view>
 
     <view class="item">
+      <navigator url="../detail/detail?id=ea">      
       <image src="{{topListIcons[2]}}"></image>
       <view class="topic-info">
         <view class="topic-content">
@@ -63,10 +65,11 @@
         </view>
         <text class="arrow"></text>
       </view>
-      
+      </navigator>
     </view>
 
     <view class="item">
+      <navigator url="../detail/detail?id=ea">      
       <image src="{{topListIcons[3]}}"></image>
       <view class="topic-info">
         <view class="topic-content">
@@ -77,10 +80,11 @@
         </view>
         <text class="arrow"></text>
       </view>
-      
+      </navigator>
     </view>
 
     <view class="item">
+      <navigator url="../detail/detail?id=ea">      
       <image src="{{topListIcons[4]}}"></image>
       <view class="topic-info">
         <view class="topic-content">
@@ -91,10 +95,11 @@
         </view>
         <text class="arrow"></text>
       </view>
-      
+      </navigator>
     </view>
 
     <view class="item">
+      <navigator url="../detail/detail?id=ea">      
       <image src="{{topListIcons[5]}}"></image>
       <view class="topic-info">
         <view class="topic-content">
@@ -105,7 +110,7 @@
         </view>
         <text class="arrow"></text>
       </view>
-      
+      </navigator>
     </view>
 
   </view>
