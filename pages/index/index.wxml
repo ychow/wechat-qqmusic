@@ -1,0 +1,112 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="logo">QQ音乐</text>
+    <navigator url="url" class="download">下载APP</navigator>
+  </view>
+
+  <view class="tab-nav">
+    <text class="tab-button" wx:key="index" bindtap="tabChange" data-index="{{index}}" wx:for="{{tabList}}" class="{{item.active ? 'active': ''}}">{{item.text}}</text>
+  </view>
+
+  <!--推荐-->
+  <view wx:if="{{pageIndex == 0}}" class="swiper">
+    <swiper indicator-dots="true"
+    autoplay="true" interval="2000">
+      <block wx:for="{{imgUrls}}">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <!--排行榜-->
+  <view class="top-list" wx:if="{{pageIndex == 1}}">
+    <view class="item">
+       <navigator url="../detail/detail?id=ea">
+          <image src="{{topListIcons[0]}}"></image>
+          <view class="topic-info">
+              <view class="topic-content">
+                <text class="topic-title">巅峰榜·欧美</text>
+                <view class="topic-song" wx:for="{{ea}}" wx:if="{{index <= 2}}">
+                  {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+                </view>
+              </view>
+              <text class="arrow"></text>
+          </view>
+        </navigator>
+    </view>
+
+    <view class="item">
+      <image src="{{topListIcons[1]}}"></image>
+      <view class="topic-info">
+        <view class="topic-content">
+          <text class="topic-title">巅峰榜·内地</text>
+          <view class="topic-song" wx:for="{{inland}}" wx:if="{{index <= 2}}">
+            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+          </view>
+        </view>
+        <text class="arrow"></text>
+      </view>
+      
+    </view>
+
+    <view class="item">
+      <image src="{{topListIcons[2]}}"></image>
+      <view class="topic-info">
+        <view class="topic-content">
+          <text class="topic-title">巅峰榜·港台</text>
+          <view class="topic-song" wx:for="{{hongkong}}" wx:if="{{index <= 2}}">
+            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+          </view>
+        </view>
+        <text class="arrow"></text>
+      </view>
+      
+    </view>
+
+    <view class="item">
+      <image src="{{topListIcons[3]}}"></image>
+      <view class="topic-info">
+        <view class="topic-content">
+          <text class="topic-title">巅峰榜·韩国</text>
+          <view class="topic-song" wx:for="{{korea}}" wx:if="{{index <= 2}}">
+            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+          </view>
+        </view>
+        <text class="arrow"></text>
+      </view>
+      
+    </view>
+
+    <view class="item">
+      <image src="{{topListIcons[4]}}"></image>
+      <view class="topic-info">
+        <view class="topic-content">
+          <text class="topic-title">巅峰榜·日本</text>
+          <view class="topic-song" wx:for="{{japan}}" wx:if="{{index <= 2}}">
+            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+          </view>
+        </view>
+        <text class="arrow"></text>
+      </view>
+      
+    </view>
+
+    <view class="item">
+      <image src="{{topListIcons[5]}}"></image>
+      <view class="topic-info">
+        <view class="topic-content">
+          <text class="topic-title">巅峰榜·热歌</text>
+          <view class="topic-song" wx:for="{{hot}}" wx:if="{{index <= 2}}">
+            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
+          </view>
+        </view>
+        <text class="arrow"></text>
+      </view>
+      
+    </view>
+
+  </view>
+</view>
