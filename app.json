@@ -1,13 +1,12 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/logs/logs",
-    "pages/detail/detail"
+    "pages/logs/logs"
   ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "QQ音乐",
+    "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle":"black"
   }
 }

@@ -1,117 +1,127 @@
+
 <!--index.wxml-->
-<view class="container">
-  <view class="header">
-    <text class="logo">QQ音乐</text>
-    <navigator url="url" class="download">下载APP</navigator>
-  </view>
-
-  <view class="tab-nav">
-    <text class="tab-button" wx:key="index" bindtap="tabChange" data-index="{{index}}" wx:for="{{tabList}}" class="{{item.active ? 'active': ''}}">{{item.text}}</text>
-  </view>
-
-  <!--推荐-->
-  <view wx:if="{{pageIndex == 0}}" class="swiper">
-    <swiper indicator-dots="true"
-    autoplay="true" interval="2000">
-      <block wx:for="{{imgUrls}}">
-        <swiper-item>
-          <image src="{{item}}" class="slide-image" />
-        </swiper-item>
-      </block>
-    </swiper>
-  </view>
-
-  <!--排行榜-->
-  <view class="top-list" wx:if="{{pageIndex == 1}}">
-    <view class="item">
-       <navigator url="../detail/detail?id=ea">
-          <image src="{{topListIcons[0]}}"></image>
-          <view class="topic-info">
-              <view class="topic-content">
-                <text class="topic-title">巅峰榜·欧美</text>
-                <view class="topic-song" wx:for="{{ea}}" wx:if="{{index <= 2}}">
-                  {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-                </view>
-              </view>
-              <text class="arrow"></text>
-          </view>
-        </navigator>
-    </view>
-
-    <view class="item">
-      <navigator url="../detail/detail?id=ea">
-      <image src="{{topListIcons[1]}}"></image>
-      <view class="topic-info">
-        <view class="topic-content">
-          <text class="topic-title">巅峰榜·内地</text>
-          <view class="topic-song" wx:for="{{inland}}" wx:if="{{index <= 2}}">
-            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-          </view>
-        </view>
-        <text class="arrow"></text>
-      </view>
-      </navigator>
-    </view>
-
-    <view class="item">
-      <navigator url="../detail/detail?id=ea">      
-      <image src="{{topListIcons[2]}}"></image>
-      <view class="topic-info">
-        <view class="topic-content">
-          <text class="topic-title">巅峰榜·港台</text>
-          <view class="topic-song" wx:for="{{hongkong}}" wx:if="{{index <= 2}}">
-            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-          </view>
-        </view>
-        <text class="arrow"></text>
-      </view>
-      </navigator>
-    </view>
-
-    <view class="item">
-      <navigator url="../detail/detail?id=ea">      
-      <image src="{{topListIcons[3]}}"></image>
-      <view class="topic-info">
-        <view class="topic-content">
-          <text class="topic-title">巅峰榜·韩国</text>
-          <view class="topic-song" wx:for="{{korea}}" wx:if="{{index <= 2}}">
-            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-          </view>
-        </view>
-        <text class="arrow"></text>
-      </view>
-      </navigator>
-    </view>
-
-    <view class="item">
-      <navigator url="../detail/detail?id=ea">      
-      <image src="{{topListIcons[4]}}"></image>
-      <view class="topic-info">
-        <view class="topic-content">
-          <text class="topic-title">巅峰榜·日本</text>
-          <view class="topic-song" wx:for="{{japan}}" wx:if="{{index <= 2}}">
-            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-          </view>
-        </view>
-        <text class="arrow"></text>
-      </view>
-      </navigator>
-    </view>
-
-    <view class="item">
-      <navigator url="../detail/detail?id=ea">      
-      <image src="{{topListIcons[5]}}"></image>
-      <view class="topic-info">
-        <view class="topic-content">
-          <text class="topic-title">巅峰榜·热歌</text>
-          <view class="topic-song" wx:for="{{hot}}" wx:if="{{index <= 2}}">
-            {{index}} <text class="topic-name">{{ item.songname}}</text> - {{item.singername}}
-          </view>
-        </view>
-        <text class="arrow"></text>
-      </view>
-      </navigator>
-    </view>
-
-  </view>
+<view class="header">
+  <image src="../../img/logo.png" />
+  <button class="download">下载APP</button>
 </view>
+<view class="nav">
+  <text class="{{ nowNav == 0 ? 'active' : '' }}" data-index="0" bindtap="changeNav">推荐</text>
+  <text class="{{ nowNav == 1 ? 'active' : '' }}" data-index="1" bindtap="changeNav">排行榜</text>
+  <text class="{{ nowNav == 2 ? 'active' : '' }}" data-index="2" bindtap="changeNav">搜索</text>
+</view>
+
+<!--推荐-->
+<scroll-view wx:if="{{ nowNav == 0}}" class="wraper">
+  <swiper indicator-dots="true" autoplay="true" interval="2000">
+    <block wx:for="{{tuiData.slider}}">
+      <swiper-item>
+        <image src="{{item.picUrl}}" class="slide-image" />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <view class="tui-block">
+    <text class="tui-title">电台</text>
+
+    <view class="radio-block">
+      <view wx:for="{{ tuiData.radioList }}">
+        <image src="{{ item.picUrl }}" />
+        <view class="tui-content">
+          <text class="h3">{{ item.Ftitle }}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+
+  <view class="tui-block">
+    <text class="tui-title">热门歌单</text>
+
+    <view class="radio-block mb10">
+      <view wx:for="{{ tuiData.songList }}">
+        <image src="{{ item.picUrl }}" />
+
+        <view class="tui-content">
+          <text class="h3">{{ item.songListDesc }}</text>
+          <text class="span">{{ item.songListAuthor }}</text>
+        </view>
+
+      </view>
+    </view>
+
+  </view>
+
+
+
+
+
+
+</scroll-view>
+
+<!--排行榜-->
+<scroll-view wx:if="{{ nowNav == 1 }}" class="wraper">
+    <image src="../../img/loading.gif" class="loading" wx:if="{{ ifLoading }}" />
+
+    <view class="pai-list" wx:for="{{orderData}}">
+      <view class="pai-pic">
+        <image src="{{ item.picUrl }}" />
+        <text class="listen-num">{{ item.listenCount }}</text>
+      </view>
+
+      <view class="pai-song">
+         <text class="song-type text-overflow">{{item.topTitle}}</text>
+         <view class="song-list text-overflow" wx:for="{{item.songList}}">
+            {{index+1}}<text>{{item.songname}}</text>-{{item.singername}}
+         </view>
+         <span class="arrow-icon"></span>
+      </view>
+    </view>
+
+
+</scroll-view>
+
+<!--搜索-->
+<scroll-view wx:if="{{ nowNav == 2 }}" class="wraper">
+    <view class="search">
+      <image src="../../img/search.png" />
+      <input type="text" class="input-search" placeholder="搜索歌曲、歌单、专辑" placeholder-class="placeholder" bindinput="inputChange" value="{{inputVal}}" bindfocus="inputfoucs" bindconfirm="enter" />
+      <icon type="clear" size="18" color="#b1b1b1" wx:if="{{ifClear}}" bindtap="clear"></icon>
+      <text class="cancel-button" wx:if="{{ifCancel}}" bindtap="cancel">取消</text>
+    </view>
+
+
+    <!--热门搜索-->
+    <view class="hot-block" wx:if="{{ifSearch}}">
+       <text class="hot-title">热门搜索</text>
+       <view class="hot-k">
+          <navigator url="{{ hotKey.special_url}}" class="special hot-button" hover-class="none-tap">{{hotKey.special_key}}</navigator>
+          <text class="hot-button" wx:for="{{hotKey.hotkey}}" wx:if="{{ index < randNum }}" bindtap="keySearch" data-text="{{item.k}}">{{item.k}}</text>
+       </view>
+    </view>
+
+
+    <!--搜索列表-->
+    <view wx:if="{{!ifSearch}}">
+      <view class="search-list" wx:for="{{list}}" bindtap="showToast">
+         <span class="song-pic"></span>
+         <text class="song-title">{{item.songname}}</text>
+         <text class="singer">{{item.singer[0].name}}</text>
+      </view>
+    </view>
+      
+
+
+
+
+
+
+</scroll-view>
+
+
+
+
+
+
+
+
+

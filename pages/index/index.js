@@ -1,129 +1,223 @@
 //index.js
-//获取应用实例
-var app = getApp();
-
 import util from '../../utils/util.js';
+
+//推荐请求地址
+const tuiUrl = "https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg";
+//排行榜请求地址
+const paiUrl = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg";
+//热门搜索
+const hotKey = "https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg";
+//搜索接口
+const search = "https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp";
+
+
 
 
 Page({
   data: {
-    pageIndex: 0,
-    ea: [],
-    tabList: [
-      {
-        "text": "推荐",
-        "active": true
-      },
-      {
-        "text": "排行榜",
-        "active": false
-      },{
-        "text": "搜索",
-        "active": false
-      }
-    ],
-    imgUrls: [
-      "http://y.gtimg.cn/music/photo_new/T003R720x288M000000VAaxp2IgYHX.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/photo_new/T003R720x288M000001yfRAk36HJlK.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/photo_new/T003R720x288M000000YW3xw39MOCT.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/photo_new/T003R720x288M000004Ngsa143WR3B.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/photo_new/T003R720x288M000003VLeCX4aXoWV.jpg?max_age=2592000"
-    ],
-    topListIcons: [
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_3_300_108654017.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_5_300_109391904.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_6_300_109274122.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_16_300_109007971.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_17_300_107762026.jpg?max_age=2592000",
-      "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_26_300_109391904.jpg?max_age=2592000"
-    ]
+    nowNav: 2,
+    tuiData: {},   //推荐的数据
+    orderData: [],  //排行榜的数据
+    ifLoading: true,   //默认是显示loading图
+    ifClear: false,
+    inputVal: '',
+    ifCancel: false,
+    hotKey: {},   //存储热门搜索的数据
+    randNum: 3,
+    ifSearch: true,
+    list: []
   },
   onLoad: function () {
-
-  },
-  tabChange: function(e){
-    var list = this.data.tabList;
-    var index = e.target.dataset.index;
     var that = this;
-
-    list.forEach(function(value,key){
-      value.active = false;
-      if(key == e.target.dataset.index){
-        value.active = true;
+    //推荐的请求
+    wx.request({
+      url: tuiUrl,
+      method: 'GET', 
+      success: function(res){
+        // success
+        console.log(res);
+        var resData = res.data.data;
+        //因为当前的this不是指向的的Page,所以要使用that.
+        that.setData({
+          tuiData: resData
+        });
       }
     });
-    this.setData({ tabList: list});
-    this.setData({pageIndex: e.target.dataset.index});
 
 
-    if(index == 1){
-      wx.showToast({
-        title: '加载中',
-        icon: 'loading',
-        duration: 100000
+    //排行榜的请求
+    wx.request({
+      url: paiUrl,
+      data: {
+        format: 'json'
+      },
+      method: 'GET', 
+      success: function(res){
+        // success
+        console.log(res.data.data.topList);  //拿到排行榜的数据
+        var data  =res.data.data.topList;
+        for(var i=0;i<data.length;i++){
+          data[i].listenCount = util.formatSong(data[i].listenCount)
+        };
+
+        that.setData({
+          orderData: data,
+          ifLoading: false   //这里已经拿到数据了了，所以需要把把ifLoading 设置为为false
+        })
+
+      }
+    });
+
+    //热门搜索的数据
+    wx.request({
+      url: hotKey,
+      data: {},
+      method: 'GET', 
+      success: function(res){
+        // success
+        console.log(res.data.data);
+        that.setData({
+          hotKey: res.data.data
+        })
+      }
+    })
+
+  },
+
+
+  //定义菜单切换的函数
+  changeNav(e){
+    //获取当前元素的的data-index的值  ＝＝＝＝ e.target.dataset.index
+    //e.target ===表示当前元素
+   let index = e.target.dataset.index;
+
+   this.setData({
+     nowNav: index
+   });
+
+   //判断排行榜的数据有没有，如果有就把ifLoading设置为为false
+   if(this.data.orderData.length){
+     this.setData({
+       ifLoading: false
+     })
+   };
+
+   if(index == 2){
+     this.setData({
+       randNum: Math.floor(Math.random()*11) + 1 
+     })
+     console.log(Math.floor(Math.random()*11));
+   }
+   
+  },
+
+
+  //搜索输入框输入文字的时候触发的函数
+  inputChange(e){
+    console.log(e.detail.value);
+    this.setData({
+      inputVal: e.detail.value
+    });
+    if(e.detail.value.length){
+      this.setData({
+        ifClear: true
       })
-
-//       榜行榜id
-// 3=欧美
-// 5=内地
-// 6=港台
-// 16=韩国
-// 17=日本
-// 26=热歌
-      util.getHot(3).then(function(res){
-        that.setData({ ea: res.data.showapi_res_body.pagebean.songlist});
-        wx.setStorage({
-          key:"ea",
-          data:res.data.showapi_res_body.pagebean.songlist
-        })
-      });
-
-      util.getHot(5).then(function(res){
-        console.log(res.data.showapi_res_body.pagebean.songlist);
-        that.setData({ inland: res.data.showapi_res_body.pagebean.songlist});
-        wx.setStorage({
-          key:"inland",
-          data:res.data.showapi_res_body.pagebean.songlist
-        })
-      });
-
-      util.getHot(6).then(function(res){
-        that.setData({ hongkong: res.data.showapi_res_body.pagebean.songlist});
-        wx.setStorage({
-          key:"hongkong",
-          data:res.data.showapi_res_body.pagebean.songlist
-        })
-      });
-
-      util.getHot(16).then(function(res){
-        that.setData({ korea: res.data.showapi_res_body.pagebean.songlist});
-        wx.setStorage({
-          key:"korea",
-          data:res.data.showapi_res_body.pagebean.songlist
-        })
-      });
-
-      util.getHot(17).then(function(res){
-        that.setData({ japan: res.data.showapi_res_body.pagebean.songlist});
-        wx.setStorage({
-          key:"japan",
-          data:res.data.showapi_res_body.pagebean.songlist
-        });
-        util.getHot(26).then(function(res){
-          that.setData({ hot: res.data.showapi_res_body.pagebean.songlist});
-           wx.hideToast();
-           wx.setStorage({
-            key:"hot",
-            data:res.data.showapi_res_body.pagebean.songlist
-          })
-        });
-      });
-
-      
-
+    }else{
+      this.setData({
+        ifClear: false
+      })
     }
+  },
 
 
+  //输入框清空文字
+  clear(e){
+    console.log(11);
+    this.setData({
+      inputVal: '',
+      ifClear: false
+    });
+  },
+
+
+  //输入框获取焦点触发的函数
+  inputfoucs(){
+    this.setData({
+      ifCancel: true,
+      ifSearch: false
+    })
+  },
+
+  //取消按钮点击事件
+  cancel(){
+    this.setData({
+      ifCancel: false,
+      inputVal: '',
+      ifClear: false,
+      ifSearch: true
+    })
+  },
+
+  keySearch(e){
+    //console.log(e.target.dataset.text);
+    this.setData({
+      inputVal: e.target.dataset.text,
+      ifCancel: true,
+      ifClear: true,
+      ifSearch: false
+    });
+
+    this.search();
+  },
+
+  //搜索
+  search(){
+    var that = this;
+    //搜索狂的文字  this.data.inputVal
+    wx.request({
+      url: search,
+      data: {
+        format: 'json',
+        w: this.data.inputVal
+      },
+      method: 'GET',
+      success: function(res){
+        // success
+        console.log(res.data.data.song.list);
+        that.setData({
+          list: res.data.data.song.list
+        })
+      }
+    })
+  },
+
+  //输入框按回车的时候触发
+  enter(){
+    this.search();
+  },
+
+  //弹框
+  showToast(){
+    wx.showModal({
+      title: '提示',
+      content: '暂时播放不了这首歌曲了',
+      showCancel:false,
+      success: function(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+        }
+      }
+    })
 
   }
+
+
 })
+
+
+
+
+
+
+
+
