@@ -3,4 +3,4 @@
 
 
 项目预览：
-    ![演示图片](https://avatars0.githubusercontent.com/u/6530996?v=3&s=40)
+    ![演示图片](http://7vijqz.com1.z0.glb.clouddn.com/test.gif)
